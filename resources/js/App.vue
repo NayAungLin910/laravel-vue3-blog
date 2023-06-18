@@ -8,10 +8,10 @@
 
             <div class="side-links">
                 <ul>
-                    <li><a class="active" href="index.html">Home</a></li>
-                    <li><a href="blog.html">Blog</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="contact.html">Contact</a></li>
+                    <li><router-link :to="{ name: 'Home' }">Home</router-link></li>
+                    <li><router-link :to="{ name: 'Blog' }">Blog</router-link></li>
+                    <li><router-link :to="{ name: 'About' }">About</router-link></li>
+                    <li><router-link :to="{ name: 'Contact' }">Contact</router-link></li>
                 </ul>
             </div>
 
@@ -47,7 +47,7 @@
                 <a href=""><i class="fab fa-instagram"></i></a>
                 <a href=""><i class="fab fa-twitter"></i></a>
             </div>
-            <small>&copy 2021 Alphayo Blog</small>
+            <small>&copy; 2021 Alphayo Blog</small>
         </footer>
     </div>
 </template>
