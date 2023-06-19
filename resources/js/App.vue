@@ -1,17 +1,33 @@
+<script setup>
+import { ref } from "vue";
+const overlayVisibility = ref(false);
+
+// toggle overlay
+const showOverlay = () => {
+    overlayVisibility.value = true;
+}
+
+const hideOverlay = () => {
+    overlayVisibility.value = false;
+}
+</script>
 <template>
     <div id="wrapper">
 
         <!-- sidebar -->
-        <div class="sidebar">
-            <span class="closeButton">&times;</span>
+        <div class="sidebar" :class="{ showOverlay: overlayVisibility }">
+            <span class="closeButton" @click="hideOverlay">&times;</span>
             <p class="brand-title"><a href="">Alphayo Blog</a></p>
 
             <div class="side-links">
                 <ul>
-                    <li><router-link :to="{ name: 'Home' }">Home</router-link></li>
-                    <li><router-link :to="{ name: 'Blog' }">Blog</router-link></li>
-                    <li><router-link :to="{ name: 'About' }">About</router-link></li>
-                    <li><router-link :to="{ name: 'Contact' }">Contact</router-link></li>
+                    <li><router-link @click="hideOverlay" :to="{ name: 'Home' }">Home</router-link></li>
+                    <li><router-link @click="hideOverlay" :to="{ name: 'Blog' }">Blog</router-link></li>
+                    <li><router-link @click="hideOverlay" :to="{ name: 'About' }">About</router-link></li>
+                    <li><router-link @click="hideOverlay" :to="{ name: 'Contact' }">Contact</router-link></li>
+                    <li><router-link @click="hideOverlay" :to="{ name: 'Register' }">Register</router-link></li>
+                    <li><router-link @click="hideOverlay" :to="{ name: 'Login' }">Login</router-link></li>
+                    <li><router-link @click="hideOverlay" :to="{ name: 'Dashboard' }">Dashboard</router-link></li>
                 </ul>
             </div>
 
@@ -28,7 +44,7 @@
         </div>
 
         <!-- Menu Button -->
-        <div class="menuButton">
+        <div class="menuButton" @click="showOverlay">
             <div class="bar"></div>
             <div class="bar"></div>
             <div class="bar"></div>
@@ -51,3 +67,9 @@
         </footer>
     </div>
 </template>
+<style scoped>
+.showOverlay {
+    width: 100%;
+    z-index: 5;
+}
+</style>
