@@ -1,56 +1,77 @@
+<script setup>
+import { reactive, ref } from 'vue';
+import axios from "axios";
+import { useRouter } from 'vue-router';
+
+let fields = reactive({});
+let errors = ref({});
+const router = useRouter();
+
+const submit = () => {
+    axios.post('/api/register', fields).then(() => {
+        router.push({ name: 'Dashboard' });
+    }).catch((error) => {
+        errors.value = error.response.data.errors;
+    })
+};
+</script>
+
 <template>
     <div id="backend-view">
-      <form>
-        <h3>Sign Up Here</h3>
-        <label for="name">Name</label>
-        <input type="text" id="name" />
+        <form @submit.prevent="submit">
+            <h3>Sign Up Here</h3>
+            <label for="name">Name</label>
+            <input type="text" v-model="fields.name" id="name" />
+            <span v-if="errors.name" class="error">{{ errors.name[0] }}</span>
 
-        <label for="email">Email</label>
-        <input type="text" id="email" />
+            <label for="email">Email</label>
+            <input type="text" v-model="fields.email" id="email" />
+            <span v-if="errors.email" class="error">{{ errors.email[0] }}</span>
 
-        <label for="password">Password</label>
-        <input type="password" id="password" />
+            <label for="password">Password</label>
+            <input type="password" v-model="fields.password" id="password" />
+            <span v-if="errors.password" class="error">{{ errors.password[0] }}</span>
 
-        <label for="confirm_password">Confirm password</label>
-        <input type="password" id="confirm_password" />
+            <label for="password_confirmation">Confirm password</label>
+            <input type="password" v-model="fields.password_confirmation" id="password_confirmation" />
+            <span v-if="errors.password_confirmation" class="error">{{ errors.password_confirmation[0] }}</span>
 
-        <button type="submit">Sign Up</button>
-        <span>Have an account?<a href=""> Log in</a></span>
-      </form>
+            <button type="submit">Sign Up</button>
+            <span>Have an account?<a href=""> Log in</a></span>
+        </form>
     </div>
-  </template>
+</template>
 
-  <script>
-  export default {};
-  </script>
-
-  <style scoped>
-  #backend-view {
+<style scoped>
+#backend-view {
     height: 100vh;
     background-color: #f3f4f6;
     display: grid;
     align-items: center;
-  }
-  form {
+}
+
+form {
     width: 400px;
     background-color: #ffffff;
     margin: 0 auto;
     border-radius: 10px;
     border: 2px solid rgba(255, 255, 255, 0.1);
     padding: 50px 35px;
-  }
-  form * {
+}
+
+form * {
     letter-spacing: 0.5px;
     outline: none;
-  }
+}
 
-  label {
+label {
     display: block;
     margin-top: 20px;
     font-size: 16px;
     font-weight: 500;
-  }
-  input {
+}
+
+input {
     display: block;
     height: 50px;
     width: 100%;
@@ -59,9 +80,9 @@
     margin-top: 8px;
     font-size: 16px;
     font-weight: 300;
-  }
+}
 
-  button {
+button {
     margin-top: 50px;
     width: 100%;
     background-color: rgba(0, 46, 173, 0.7);
@@ -71,17 +92,19 @@
     font-weight: 600;
     border-radius: 5px;
     cursor: pointer;
-  }
-  form span {
+}
+
+form span {
     display: block;
     margin-top: 20px;
-  }
-  a {
-    color: rgba(0, 46, 173, 0.8);
-  }
+}
 
-  .loader {
+a {
+    color: rgba(0, 46, 173, 0.8);
+}
+
+.loader {
     text-align: center;
     margin-bottom: 15px;
-  }
-  </style>
+}
+</style>
