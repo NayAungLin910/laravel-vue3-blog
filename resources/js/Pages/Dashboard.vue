@@ -1,8 +1,39 @@
+<script setup>
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import { ref, onMounted } from 'vue';
+
+const name = ref('');
+const router = useRouter();
+
+/**
+ * Get the user name
+ */
+onMounted(() => {
+    axios.get('/api/user').then((response) => {
+        name.value = response.data.name; // get the name of the authenticated user
+    }).catch((error) => {
+        console.log(error)
+    })
+});
+
+/**
+ * Logout the user
+ */
+const logout = () => {
+    axios.post('/api/logout').then(() => {
+        router.push({ name: 'Home' });
+    }).catch((error) => {
+        console.log(error);
+    })
+}
+</script>
+
 <template>
     <div id="backend-view">
-        <div class="logout"><a href="#">Log out</a></div>
+        <div class="logout"><a href="#" @click="logout">Log out</a></div>
         <h1 class="heading">Dashboard</h1>
-        <span>Hi Alphayo ?</span>
+        <span>Hi {{ name }} ?</span>
         <div class="links">
             <ul>
                 <li><a href="">Create Post</a></li>
@@ -14,10 +45,6 @@
         </div>
     </div>
 </template>
-
-<script>
-export default {};
-</script>
 
 <style scoped>
 /* dashboard */
@@ -57,4 +84,5 @@ export default {};
     font-size: 26px;
     display: inline-block;
     margin: 10px 0;
-}</style>
+}
+</style>
