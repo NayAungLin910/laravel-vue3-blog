@@ -20,6 +20,7 @@ use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 /* public routes */
 
 Route::post('register', [RegisteredUserController::class, 'store'])->name('api.register');
+Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('api.login');
 
 /* private routes */
 

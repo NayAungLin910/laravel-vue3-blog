@@ -1,10 +1,11 @@
 <script setup>
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, defineEmits } from 'vue';
 
 const name = ref('');
 const router = useRouter();
+const emit = defineEmits(['updateSidebar']);
 
 /**
  * Get the user name
@@ -23,6 +24,8 @@ onMounted(() => {
 const logout = () => {
     axios.post('/api/logout').then(() => {
         router.push({ name: 'Home' });
+        localStorage.removeItem('authenticated');
+        emit('updateSidebar');
     }).catch((error) => {
         console.log(error);
     })

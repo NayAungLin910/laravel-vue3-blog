@@ -1,6 +1,7 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 const overlayVisibility = ref(false);
+const loggedIn = ref(false);
 
 // toggle overlay
 const showOverlay = () => {
@@ -10,6 +11,21 @@ const showOverlay = () => {
 const hideOverlay = () => {
     overlayVisibility.value = false;
 }
+
+// update sidebar
+const updateSidebar = () => {
+    loggedIn.value = !loggedIn.value;
+    console.log('hello');
+}
+
+// check local storage on mounted
+onMounted(() => {
+    if (localStorage.getItem('authenticated')) {
+        loggedIn.value = true;
+    } else {
+        loggedIn.value = false;
+    }
+});
 </script>
 <template>
     <div id="wrapper">
@@ -25,9 +41,11 @@ const hideOverlay = () => {
                     <li><router-link @click="hideOverlay" :to="{ name: 'Blog' }">Blog</router-link></li>
                     <li><router-link @click="hideOverlay" :to="{ name: 'About' }">About</router-link></li>
                     <li><router-link @click="hideOverlay" :to="{ name: 'Contact' }">Contact</router-link></li>
-                    <li><router-link @click="hideOverlay" :to="{ name: 'Register' }">Register</router-link></li>
-                    <li><router-link @click="hideOverlay" :to="{ name: 'Login' }">Login</router-link></li>
-                    <li><router-link @click="hideOverlay" :to="{ name: 'Dashboard' }">Dashboard</router-link></li>
+                    <li><router-link v-if="!loggedIn" @click="hideOverlay" :to="{ name: 'Register' }">Register</router-link>
+                    </li>
+                    <li><router-link v-if="!loggedIn" @click="hideOverlay" :to="{ name: 'Login' }">Login</router-link></li>
+                    <li><router-link v-if="loggedIn" @click="hideOverlay"
+                            :to="{ name: 'Dashboard' }">Dashboard</router-link></li>
                 </ul>
             </div>
 
@@ -53,7 +71,7 @@ const hideOverlay = () => {
         <!-- main -->
         <main class="container">
             <!-- render components based on the page visited -->
-            <router-view></router-view>
+            <router-view @update-sidebar="updateSidebar"></router-view>
         </main>
 
         <!-- Main footer -->

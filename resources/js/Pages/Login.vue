@@ -1,12 +1,37 @@
+<script setup>
+import axios from 'axios';
+import { reactive, ref, defineEmits } from 'vue';
+import { useRouter } from 'vue-router';
+
+let fields = reactive({});
+let errors = ref({});
+const router = useRouter();
+const emit = defineEmits(['updateSidebar'])
+
+const submit = () => {
+    axios.post('/api/login', fields).then(() => {
+        router.push({ name: 'Dashboard' });
+        localStorage.setItem('authenticated', 'true');
+        emit('updateSidebar');
+    }).catch((error) => {
+        errors.value = error.response.data.errors; // set errors
+    });
+};
+</script>
 <template>
     <div id="backend-view">
-        <form>
+        <form @submit.prevent="submit">
             <h3>Login Here</h3>
-            <label for="email">Email</label>
-            <input type="text" id="email" />
 
+            <!-- email -->
+            <label for="email">Email</label>
+            <input type="text" id="email" v-model="fields.email" />
+            <span v-if="errors.email" class="error">{{ errors.email[0] }}</span>
+
+            <!-- password -->
             <label for="password">Password</label>
-            <input type="password" id="password" />
+            <input type="password" id="password" v-model="fields.password" />
+            <span v-if="errors.password" class="error">{{ errors.password[0] }}</span>
 
             <button type="submit">Log In</button>
             <span>Don't have an account? <a href="">Sign up</a></span>
@@ -72,4 +97,5 @@ form span {
 
 a {
     color: rgba(0, 46, 173, 0.8);
-}</style>
+}
+</style>
