@@ -8,6 +8,7 @@ import SingleBlog from "../pages/SingleBlog.vue";
 import Login from "../Pages/Login.vue";
 import Register from "../Pages/Register.vue";
 import Dashboard from "../Pages/Dashboard.vue";
+import CreateCategories from "../Pages/categories/CreateCategories.vue";
 
 const routes = [
     {
@@ -40,22 +41,48 @@ const routes = [
         path: "/login",
         name: "Login",
         component: Login,
+        meta: { requiresGuest: true }
     },
     {
         path: "/register",
         name: "Register",
         component: Register,
+        meta: { requiresGuest: true }
     },
     {
         path: "/dashboard",
         name: "Dashboard",
         component: Dashboard,
+        meta: { requiresAuth: true }
     },
+    {
+        path: '/categories/create',
+        name: 'CreateCategories',
+        component: CreateCategories,
+        meta: { requiresAuth: true }
+    }
 ];
 
 const router = createRouter({
     history: createWebHistory(),
     routes,
 });
+
+
+router.beforeEach((to, from) => {
+    const authenticated = localStorage.getItem('authenticated');
+
+    if (to.meta.requiresGuest && authenticated) {
+        // if authenticated user is trying to access guest routes
+        return {
+            name: 'Dashboard',
+        }
+    } else if (to.meta.requiresAuth && !authenticated) {
+        // if unauthenticated user is trying to access auth routes
+        return {
+            name: 'Login',
+        }
+    }
+})
 
 export default router;

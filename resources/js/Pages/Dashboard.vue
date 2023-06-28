@@ -14,7 +14,11 @@ onMounted(() => {
     axios.get('/api/user').then((response) => {
         name.value = response.data.name; // get the name of the authenticated user
     }).catch((error) => {
-        console.log(error)
+        if (error.response.status = 401) {
+            emit('updateSidebar');
+            localStorage.removeItem('authenticated');
+            router.push({ name: 'Login' });
+        }
     })
 });
 
@@ -40,9 +44,11 @@ const logout = () => {
         <div class="links">
             <ul>
                 <li><a href="">Create Post</a></li>
-
-                <li><a href="">Create Category</a></li>
-
+                <li>
+                    <router-link :to="{ name: 'CreateCategories' }">
+                        Create Categories
+                    </router-link>
+                </li>
                 <li><a href="">Categories List</a></li>
             </ul>
         </div>

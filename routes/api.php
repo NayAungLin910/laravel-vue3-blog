@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -23,10 +24,13 @@ Route::post('register', [RegisteredUserController::class, 'store'])->name('api.r
 Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('api.login');
 
 /* private routes */
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    })->name('api.user');
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-})->name('api.user');
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+        ->name('api.logout');
 
-Route::middleware('auth:sanctum')->post('/logout', [AuthenticatedSessionController::class, 'destroy'])
-    ->name('api.logout');
+    Route::post('/categories/create', [CategoryController::class, 'store']);
+});
