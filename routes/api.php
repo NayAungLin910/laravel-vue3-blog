@@ -24,7 +24,8 @@ Route::post('register', [RegisteredUserController::class, 'store'])->name('api.r
 Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('api.login');
 
 /* private routes */
-Route::middleware(['auth:sanctum'])->group(function () {
+
+Route::middleware(['auth:sanctum'])->as('api.')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
     })->name('api.user');
@@ -32,5 +33,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('api.logout');
 
-    Route::post('/categories/create', [CategoryController::class, 'store']);
+    // categories routes
+    Route::prefix('categories')->as('categories.')->group(function() {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::post('/create', [CategoryController::class, 'store'])->name('create');
+        Route::get('/{category}', [CategoryController::class, 'show'])->name('show');
+        Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
+    });
 });

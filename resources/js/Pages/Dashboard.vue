@@ -1,14 +1,14 @@
 <script setup>
 import axios from 'axios';
 import { useRouter } from 'vue-router';
-import { ref, onMounted, defineEmits } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const name = ref('');
 const router = useRouter();
 const emit = defineEmits(['updateSidebar']);
 
 /**
- * Get the user name
+ * Get the user info
  */
 onMounted(() => {
     axios.get('/api/user').then((response) => {
@@ -49,7 +49,11 @@ const logout = () => {
                         Create Categories
                     </router-link>
                 </li>
-                <li><a href="">Categories List</a></li>
+                <li>
+                    <router-link :to="{ name: 'CategoriesList' }">
+                        Categories List
+                    </router-link>
+                </li>
             </ul>
         </div>
     </div>

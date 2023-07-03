@@ -1,6 +1,6 @@
 <script setup>
 import axios from 'axios';
-import { reactive, ref, defineEmits } from 'vue';
+import { reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 let fields = reactive({});

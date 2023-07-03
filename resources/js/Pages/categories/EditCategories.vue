@@ -1,15 +1,15 @@
 <script setup>
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 let field = ref({});
 let errors = ref({});
 let success = ref(false);
+const props = defineProps(['id']);
 
-// submit post request to create category
+// submit post request to edit category
 const submit = () => {
-    axios.post("/api/categories/create", field.value).then(() => {
-        field.value = {};
+    axios.put(`/api/categories/${props.id}/`, field.value).then((response) => {
         errors.value = {};
         success.value = true;
 
@@ -21,17 +21,26 @@ const submit = () => {
     })
 }
 
+// fetch the chosen category info
+onMounted(() => {
+    axios.get(`/api/categories/${props.id}`).then((response) => {
+        field.value = response.data;
+    }).catch((error) => {
+        errors.value = error.response.data.errors;
+    })
+});
+
 </script>
 
 <template>
     <div id="create-categories">
         <div id="contact-us">
-            <h1>Create New Category!</h1>
+            <h1>Edit Category!</h1>
 
             <!-- success message -->
             <div class="success-msg" v-if="success">
                 <i class="fa fa-check"></i>
-                Category created successfully
+                Category updated successfully!
             </div>
 
             <div class="contact-form">
@@ -42,7 +51,7 @@ const submit = () => {
                     <input type="text" id="name" v-model="field.name" />
                     <span v-if="errors.name" class="error">{{ errors.name[0] }}</span>
 
-                    <input type="submit" value="Submit" />
+                    <input type="submit" value="Save" />
                 </form>
             </div>
             <div class="create-categories">
