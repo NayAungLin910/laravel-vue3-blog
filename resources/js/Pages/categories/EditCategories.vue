@@ -1,22 +1,21 @@
 <script setup>
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 let field = ref({});
 let errors = ref({});
-let success = ref(false);
+const router = useRouter();
 const props = defineProps(['id']);
 
 // submit post request to edit category
 const submit = () => {
-    axios.put(`/api/categories/${props.id}/`, field.value).then((response) => {
+    axios.put(`/api/categories/${props.id}/`, field.value).then(() => {
         errors.value = {};
-        success.value = true;
 
-        setInterval(() => {
-            success.value = false;
-        }, 2500);
+        router.push({ name: 'CategoriesList', params: { successMessage: "Category edited successfully!" } }); // route back to categories list and show success message
     }).catch((error) => {
+        console.log(error);
         errors.value = error.response.data.errors;
     })
 }
@@ -36,12 +35,6 @@ onMounted(() => {
     <div id="create-categories">
         <div id="contact-us">
             <h1>Edit Category!</h1>
-
-            <!-- success message -->
-            <div class="success-msg" v-if="success">
-                <i class="fa fa-check"></i>
-                Category updated successfully!
-            </div>
 
             <div class="contact-form">
                 <form @submit.prevent="submit">

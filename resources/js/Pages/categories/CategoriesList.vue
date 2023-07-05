@@ -3,23 +3,65 @@ import axios from 'axios';
 import { ref, onMounted } from 'vue';
 
 let categories = ref([]);
+let successShow = ref("");
+const props = defineProps(['successMessage']);
 
 /**
- * Fetch the categories
+ * Toggle success message
  */
-onMounted(() => {
+const toggleSuccessMessage = (message) => {
+    successShow.value = message;
+    setInterval(() => {
+        successShow.value = "";
+    }, 2500)
+}
+
+/**
+ * Get all categories 
+ */
+const getAllCategories = () => {
     axios.get('/api/categories').then((response) => {
         categories.value = response.data;
     }).catch((error) => {
         console.log(error)
     })
+}
+
+/**
+ * Fetch the categories
+ */
+onMounted(() => {
+    getAllCategories();
+
+    // if success message props exists
+    if (props.successMessage) {
+        toggleSuccessMessage(props.successMessage)
+    }
 });
 
+/**
+ * Delete a category
+ */
+const destroy = (category_id) => {
+    axios.delete(`/api/categories/${category_id}`).then((res) => {
+        toggleSuccessMessage(res.data.successMessage)
+        getAllCategories(); // refetch the categories to get the latest update after delete
+    }).catch((error) => {
+        console.log(error);
+    })
+}
 </script>
 
 <template>
     <div class="categories-list">
         <h1>Categories List</h1>
+
+        <!-- success message -->
+        <div class="success-msg" v-if="successShow">
+            <i class="fa fa-check"></i>
+            {{ successShow }}
+        </div>
+
         <div class="item" v-for="(category, index) in categories" :key="category.id">
             <span>{{ index + 1 }}</span>
             <p>{{ category.name }}</p>
@@ -27,7 +69,7 @@ onMounted(() => {
                 <router-link :to="{ name: 'EditCategories', params: { id: category.id } }">Edit</router-link>
             </div>
 
-            <input type="submit" value="Delete" />
+            <input type="button" value="Delete" @click="destroy(category.id)" />
         </div>
         <div class="index-categories">
             <router-link :to="{ name: 'CreateCategories' }">Create Categories<span>&#8594;</span></router-link>

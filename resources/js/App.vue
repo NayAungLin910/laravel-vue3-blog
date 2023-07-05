@@ -15,7 +15,6 @@ const hideOverlay = () => {
 // update sidebar
 const updateSidebar = () => {
     loggedIn.value = !loggedIn.value;
-    console.log('hello');
 }
 
 // check local storage on mounted

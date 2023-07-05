@@ -39,5 +39,6 @@ Route::middleware(['auth:sanctum'])->as('api.')->group(function () {
         Route::post('/create', [CategoryController::class, 'store'])->name('create');
         Route::get('/{category}', [CategoryController::class, 'show'])->name('show');
         Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
+        Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('delete');
     });
 });
