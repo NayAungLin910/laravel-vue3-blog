@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -34,11 +35,16 @@ Route::middleware(['auth:sanctum'])->as('api.')->group(function () {
         ->name('api.logout');
 
     // categories routes
-    Route::prefix('categories')->as('categories.')->group(function() {
+    Route::prefix('categories')->as('categories.')->group(function () {
         Route::get('/', [CategoryController::class, 'index'])->name('index');
         Route::post('/create', [CategoryController::class, 'store'])->name('create');
         Route::get('/{category}', [CategoryController::class, 'show'])->name('show');
         Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
         Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('delete');
+    });
+
+    // posts routes
+    Route::prefix('posts')->as('posts.')->group(function () {
+        Route::post('/', [PostController::class, 'store'])->name('create');
     });
 });
