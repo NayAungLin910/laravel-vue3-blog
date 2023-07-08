@@ -1,9 +1,9 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 use Laravel\Fortify\Http\Controllers\RegisteredUserController;
@@ -23,6 +23,11 @@ use Laravel\Fortify\Http\Controllers\RegisteredUserController;
 
 Route::post('register', [RegisteredUserController::class, 'store'])->name('api.register');
 Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('api.login');
+
+// posts api
+Route::prefix('posts')->as('posts.')->group(function () {
+    Route::get('/home-posts', [HomeController::class, 'index'])->name('home-posts');
+});
 
 /* private routes */
 

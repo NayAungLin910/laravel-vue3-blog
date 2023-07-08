@@ -45,6 +45,7 @@ const submit = () => {
     axios.post("/api/posts", fields.value, {
         headers: { 'Content-Type': "multipart/form-data" }
     }).then((res) => {
+        url.value = '';
         fields.value = { category_id: '' };
         errors.value = {};
         successShow.value = res.data.successMessage;
