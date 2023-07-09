@@ -1,69 +1,68 @@
+<script setup>
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
+
+defineEmits(['updateSidebar']);
+
+const props = defineProps(['slug'])
+const post = ref({})
+const relatedPosts = ref([])
+
+const fetchPost = () => {
+    axios.get(`/api/posts/${props.slug}`).then((res) => {
+        post.value = res.data.data
+    }).catch((error) => {
+        console.log(error);
+    })
+}
+
+const fetchRelatedPost = () => {
+    axios.get(`/api/posts/related-posts/${props.slug}`).then((res) => {
+        relatedPosts.value = res.data.data
+    }).catch((error) => {
+        console.log(error);
+    })
+}
+
+onMounted(() => {
+    fetchPost()
+    fetchRelatedPost()
+})
+
+</script>
+
 <template>
     <section class="single-blog-post">
-        <h1>Benefits of paul's photography</h1>
+        <h1>{{ post.title }}</h1>
 
         <p class="time-and-author">
-            2 hours ago
-            <span>Written By Alphayo Wakarindi</span>
+            {{ post.created_at }}
+            <span>Written By {{ post.user }}</span>
         </p>
 
         <div class="single-blog-post-ContentImage" data-aos="fade-left">
-            <img src="/images/pic1.jpg" alt="" />
+            <img :src="`/${post.imagePath}`" :alt="`The post, ${post.name}'s image`" />
         </div>
 
         <div class="about-text">
             <p>
-                Vaccination is the most
-                effective way to protect against infectious diseases. Vaccines
-                strengthen your immune system by training it to recognise and
-                fight against specific viruses. When you get vaccinated, you are
-                protecting yourself and helping to protect the whole community.
-                <br><br>
-                A COVID-19 vaccine might:
-            <ul>
-                <li> Prevent you from getting COVID-19 or from
-                    becoming seriously ill or dying due to COVID-19 </li>
-                <li>Prevent you from
-                    spreading the COVID-19 virus to others </li>
-                <li> Add to the number of people
-                    in the community who are protected from getting COVID-19 — making
-                    it harder for the disease to spread and contributing to herd
-                    immunity </li>
-                <li> Prevent the COVID-19 virus from spreading and
-                    replicating, which allows it to mutate and possibly become more
-                    resistant to vaccines</li>
-            </ul>
+                {{ post.body }}
             </p>
         </div>
     </section>
     <section class="recommended">
         <p>Related</p>
         <div class="recommended-cards">
-            <a href="">
+            <router-link v-for="relatedPost in relatedPosts" :key="relatedPost.id"
+                :to="{ name: 'SingleBlog', params: { slug: relatedPost.slug } }">
                 <div class="recommended-card">
-                    <img src="/images/pic5.jpg" alt="" loading="lazy" />
+                    <img :src="`/${relatedPost.imagePath}`" :alt="`The post, ${relatedPost.title}'s image'`"
+                        loading="lazy" />
                     <h4>
-                        12 Health Benefits Of Pomegranate Fruit
+                        {{ relatedPost.title }}
                     </h4>
                 </div>
-            </a>
-            <a href="">
-                <div class="recommended-card">
-                    <img src="/images/pushups.jpg" alt="" loading="lazy" />
-                    <h4>
-                        The Truth About Pushups
-                    </h4>
-                </div>
-            </a>
-            <a href="">
-                <div class="recommended-card">
-                    <img src="/images/smoothies.jpg" alt="" loading="lazy" />
-                    <h4>
-                        Healthy Smoothies
-                    </h4>
-                </div>
-            </a>
-
+            </router-link>
         </div>
     </section>
 </template>

@@ -34,13 +34,13 @@ onMounted(() => {
     <h2 class="header-title">Latest Blog Posts</h2>
     <section class="cards-blog latest-blog">
         <div class="card-blog-content" v-for="post in posts" :key="post.id">
-            <img :src="post.imagePath" :alt="`The post, ${post.name}'s image`" />
+            <img :src="`${post.imagePath}`" :alt="`The post, ${post.name}'s image`" />
             <p>
                 {{ post.created_at }}
                 <span style="float: right">Written By {{ post.user }}</span>
             </p>
             <h4 style="font-weight: bolder">
-                <router-link :to="{ name: 'SingleBlog', params: { slug: 'benefits-of-getting-covid-19-vaccination' } }">
+                <router-link :to="{ name: 'SingleBlog', params: { slug: post.slug } }">
                     {{ post.title }}
                 </router-link>
             </h4>

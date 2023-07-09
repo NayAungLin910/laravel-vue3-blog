@@ -1,7 +1,9 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRoute } from "vue-router";
 const overlayVisibility = ref(false);
 const loggedIn = ref(false);
+const route = useRoute();
 
 // toggle overlay
 const showOverlay = () => {
@@ -70,7 +72,7 @@ onMounted(() => {
         <!-- main -->
         <main class="container">
             <!-- render components based on the page visited -->
-            <router-view @update-sidebar="updateSidebar"></router-view>
+            <router-view :key="route.path" @update-sidebar="updateSidebar"></router-view>
         </main>
 
         <!-- Main footer -->
