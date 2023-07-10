@@ -66,10 +66,10 @@ const destroy = (category_id) => {
             <span>{{ index + 1 }}</span>
             <p>{{ category.name }}</p>
             <div>
-                <router-link :to="{ name: 'EditCategories', params: { id: category.id } }">Edit</router-link>
+                <router-link class="edit-link" :to="{ name: 'EditCategories', params: { id: category.id } }">Edit</router-link>
             </div>
 
-            <input type="button" value="Delete" @click="destroy(category.id)" />
+            <input type="button" class="delete-btn" value="Delete" @click="destroy(category.id)" />
         </div>
         <div class="index-categories">
             <router-link :to="{ name: 'CreateCategories' }">Create Categories<span>&#8594;</span></router-link>
@@ -105,24 +105,6 @@ const destroy = (category_id) => {
 .categories-list .item div,
 .categories-list .item {
     margin: 15px 8px;
-}
-
-.categories-list .item div a {
-    padding: 6px 20px;
-    background-color: #4caf50;
-    color: #fff;
-    font-size: 14px;
-    display: inline-block;
-}
-
-.categories-list .item input {
-    padding: 6px 13px;
-    background-color: red;
-    color: #fff;
-    border: none;
-    font-size: 16px;
-    cursor: pointer;
-    font-size: 14px;
 }
 
 .categories ul li {

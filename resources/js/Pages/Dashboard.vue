@@ -49,6 +49,11 @@ const logout = () => {
                     </router-link>
                 </li>
                 <li>
+                    <router-link :to="{ name: 'DashboardPostsList' }">
+                        Posts List
+                    </router-link>
+                </li>
+                <li>
                     <router-link :to="{ name: 'CreateCategories' }">
                         Create Categories
                     </router-link>

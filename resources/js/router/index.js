@@ -12,6 +12,7 @@ import CreateCategories from "../Pages/categories/CreateCategories.vue";
 import CategoriesList from "../Pages/categories/CategoriesList.vue";
 import EditCategories from "../Pages/categories/EditCategories.vue";
 import CreatePosts from "../Pages/posts/CreatePosts.vue";
+import DashboardPostsList from "../Pages/posts/DashboardPostsList.vue";
 
 const routes = [
     {
@@ -82,6 +83,12 @@ const routes = [
         path: '/posts/create',
         name: 'CreatePosts',
         component: CreatePosts,
+        meta: { requiresAuth: true },
+    },
+    {
+        path: '/dashboard-posts',
+        name: 'DashboardPostsList',
+        component: DashboardPostsList,
         meta: { requiresAuth: true },
     }
 ];

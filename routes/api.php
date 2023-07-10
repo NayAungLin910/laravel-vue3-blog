@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardPostController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\RelatedPostController;
@@ -32,6 +33,9 @@ Route::prefix('posts')->as('posts.')->group(function () {
     Route::get('/{post:slug}', [PostController::class, 'show'])->name('show');
     Route::prefix('related-posts')->as('related-posts.')->group(function () {
         Route::get('/{post:slug}', [RelatedPostController::class, 'index'])->name('index');
+    });
+    Route::prefix('dashboard-posts')->as('dashboard-posts.')->group(function () {
+        Route::get('/all', [DashboardPostController::class, 'index'])->name('index');
     });
 });
 
