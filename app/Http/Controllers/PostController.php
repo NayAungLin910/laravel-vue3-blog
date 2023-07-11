@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
@@ -60,5 +61,37 @@ class PostController extends Controller
     public function show(Post $post)
     {
         return new PostResource($post);
+    }
+
+    public function update(Post $post, Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'file' => 'nullable|image',
+            'body' => 'required',
+            'category_id' => 'required',
+        ]);
+
+        $title = $request->title;
+        $category_id = $request->category_id;
+
+        $slug = Str::slug($title, '-') . '-' . $post->id;
+        $body = $request->body;
+
+        // if new image is attached in the quest
+        if($request->file('file')) {
+            File::delete($post->imagePath); // deletes old image
+            $imageUrlPath = $request->file('file')->store('postsImages', 'public');
+            $imageRootPath = 'storage/' . $imageUrlPath;
+            $post->imagePath = $imageRootPath; 
+        }
+
+        // save the edit
+        $post->title = $title;
+        $post->category_id = $category_id;
+        $post->slug = $slug;
+        $post->body = $body;
+        
+        return $post->save();
     }
 }

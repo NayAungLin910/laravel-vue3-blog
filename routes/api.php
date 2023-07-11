@@ -30,12 +30,8 @@ Route::post('login', [AuthenticatedSessionController::class, 'store'])->name('ap
 Route::prefix('posts')->as('posts.')->group(function () {
     Route::get('/', [PostController::class, 'index'])->name('index');
     Route::get('/home-posts', [HomeController::class, 'index'])->name('home-posts');
-    Route::get('/{post:slug}', [PostController::class, 'show'])->name('show');
     Route::prefix('related-posts')->as('related-posts.')->group(function () {
         Route::get('/{post:slug}', [RelatedPostController::class, 'index'])->name('index');
-    });
-    Route::prefix('dashboard-posts')->as('dashboard-posts.')->group(function () {
-        Route::get('/all', [DashboardPostController::class, 'index'])->name('index');
     });
 });
 
@@ -61,5 +57,10 @@ Route::middleware(['auth:sanctum'])->as('api.')->group(function () {
     // posts routes
     Route::prefix('posts')->as('posts.')->group(function () {
         Route::post('/', [PostController::class, 'store'])->name('create');
+        Route::prefix('dashboard-posts')->as('dashboard-posts.')->group(function () {
+            Route::get('/all', [DashboardPostController::class, 'index'])->name('index');
+        });
+        Route::get('/{post:slug}', [PostController::class, 'show'])->name('show');
+        Route::put('/{post:slug}', [PostController::class, 'update'])->name('update');
     });
 });

@@ -3,6 +3,8 @@ import axios from 'axios';
 import { ref, onMounted } from 'vue';
 
 defineEmits(['updateSidebar'])
+const props = defineProps(['editSuccess']);
+
 const posts = ref([]);
 const successMessage = ref('');
 
@@ -30,11 +32,18 @@ onMounted(() => {
             <i class="fa fa-check"></i>
             {{ successMessage }}
         </div>
+        <div class="success-msg" v-if="props.editSuccess">
+            <i class="fa fa-check"></i>
+            {{ props.editSuccess }}
+        </div>
+
         <div class="item" v-for="(post, index) in posts" :key="post.id">
             <span>{{ index + 1 }}</span>
             <p>{{ post.title }}</p>
             <div>
-                <a href="" class="edit-link">Edit</a>
+                <router-link :to="{ name: 'EditPosts', params: { slug: post.slug } }" class="edit-link">
+                    Edit
+                </router-link>
             </div>
 
             <input type="submit" value="Delete" class="delete-btn" />

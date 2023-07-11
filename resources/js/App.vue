@@ -4,6 +4,7 @@ import { useRoute } from "vue-router";
 const overlayVisibility = ref(false);
 const loggedIn = ref(false);
 const route = useRoute();
+const editSuccess = ref('');
 
 // toggle overlay
 const showOverlay = () => {
@@ -17,6 +18,15 @@ const hideOverlay = () => {
 // update sidebar
 const updateSidebar = () => {
     loggedIn.value = !loggedIn.value;
+}
+
+// show edit success message
+const showEditSuccess = (message) => {
+    editSuccess.value = message;
+    setInterval(() => {
+        editSuccess.value = '';
+    }, 2500);
+    console.log(message);
 }
 
 // check local storage on mounted
@@ -72,7 +82,8 @@ onMounted(() => {
         <!-- main -->
         <main class="container">
             <!-- render components based on the page visited -->
-            <router-view :key="route.path" @update-sidebar="updateSidebar"></router-view>
+            <router-view :editSuccess="editSuccess" :key="route.path" @show-edit-success="showEditSuccess"
+                @update-sidebar="updateSidebar"></router-view>
         </main>
 
         <!-- Main footer -->
