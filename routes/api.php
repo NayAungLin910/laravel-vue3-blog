@@ -62,5 +62,6 @@ Route::middleware(['auth:sanctum'])->as('api.')->group(function () {
         });
         Route::get('/{post:slug}', [PostController::class, 'show'])->name('show');
         Route::put('/{post:slug}', [PostController::class, 'update'])->name('update');
+        Route::delete('/{post:slug}', [PostController::class, 'destroy'])->name('destroy');
     });
 });

@@ -3,20 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\PostResource;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return PostResource::collection(Post::latest()->get());
+        $posts = PostResource::collection(Post::latest()->get());
+        
+        // filter by category if selected
+        if ($request->category) {
+            $posts = PostResource::collection(
+                Category::where('name', $request->category)
+                ->firstOrFail()
+                ->posts()
+                ->latest()
+                ->get()
+            );
+        }
+
+        return $posts;
     }
 
     public function store(Request $request)
     {
+
         $request->validate([
             'title' => 'required',
             'file' => 'required|image',
@@ -60,11 +76,18 @@ class PostController extends Controller
 
     public function show(Post $post)
     {
+        if(auth()->user()->id !== $post->user->id) {
+            return abort(403);
+        }
         return new PostResource($post);
     }
 
     public function update(Post $post, Request $request)
     {
+        if(auth()->user()->id !== $post->user->id) {
+            return abort(403);
+        }
+        
         $request->validate([
             'title' => 'required',
             'file' => 'nullable|image',
@@ -93,5 +116,21 @@ class PostController extends Controller
         $post->body = $body;
         
         return $post->save();
+    }
+
+    public function destroy(Post $post)
+    {
+        if(auth()->user()->id !== $post->user->id) {
+            return abort(403);
+        }
+
+        // delets the image of the post
+        if(File::exists($post->imagePath)) {
+            File::delete($post->imagePath);
+        }
+
+        $post->delete();
+
+        return response(['successMessage' => 'The post has been successfully deleted!']);
     }
 }

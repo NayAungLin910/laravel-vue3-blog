@@ -26,7 +26,6 @@ const showEditSuccess = (message) => {
     setInterval(() => {
         editSuccess.value = '';
     }, 2500);
-    console.log(message);
 }
 
 // check local storage on mounted

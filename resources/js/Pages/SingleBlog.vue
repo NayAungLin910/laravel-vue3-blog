@@ -2,7 +2,7 @@
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 
-defineEmits(['updateSidebar']);
+defineEmits(['updateSidebar', 'showEditSuccess']);
 
 const props = defineProps(['slug'])
 const post = ref({})

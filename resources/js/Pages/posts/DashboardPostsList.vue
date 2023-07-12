@@ -19,6 +19,20 @@ const getAllPosts = () => {
     })
 }
 
+/**
+ * Delete post
+ */
+const destroy = (slug) => {
+    axios.delete(`/api/posts/${slug}`).then((response) => {
+        posts.value = posts.value.filter(post => post.slug !== slug ); // remove the post form ref
+
+        successMessage.value = response.data.successMessage // show success message
+        setInterval(() => { successMessage.value = '' }, 2500)
+    }).catch((error) => {
+        console.log(error.response.data)
+    })
+}
+
 onMounted(() => {
     getAllPosts();
 })
@@ -46,7 +60,7 @@ onMounted(() => {
                 </router-link>
             </div>
 
-            <input type="submit" value="Delete" class="delete-btn" />
+            <input type="button" value="Delete" class="delete-btn" @click="destroy(post.slug)" />
         </div>
         <div class="index-categories">
             <router-link :to="{ name: 'CreatePosts' }">Create post<span>&#8594;</span></router-link>

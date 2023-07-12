@@ -2,8 +2,29 @@
 import axios from 'axios';
 import { ref, onMounted } from 'vue';
 
-defineEmits(['updateSidebar'])
+defineEmits(['updateSidebar', 'showEditSuccess'])
+const porps = defineProps(['editSuccess'])
 const posts = ref([]);
+const categories = ref([]);
+
+/**
+ * Filter posts by category
+ */
+const filterByCategory = (name) => {
+  axios
+    .get('/api/posts', {
+      params: {
+        category: name,
+      }
+    })
+    .then((response) => {
+      posts.value = response.data.data;
+      console.log(response.data.data)
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+}
 
 /**
  * Get posts
@@ -16,8 +37,20 @@ const getAllPosts = () => {
   })
 }
 
+/**
+ * Get all categories 
+ */
+const getAllCategories = () => {
+  axios.get('/api/categories').then((response) => {
+    categories.value = response.data;
+  }).catch((error) => {
+    console.log(error)
+  })
+}
+
 onMounted(() => {
   getAllPosts();
+  getAllCategories();
 })
 </script>
 
@@ -35,10 +68,11 @@ onMounted(() => {
   </div>
   <div class="categories">
     <ul>
-      <li><a href="">Health</a></li>
-      <li><a href="">Entertainment</a></li>
-      <li><a href="">Sports</a></li>
-      <li><a href="">Nature</a></li>
+      <li v-for="category in categories" :key="category.id">
+        <a @click="filterByCategory(category.name)">
+          {{ category.name }}
+        </a>
+      </li>
     </ul>
   </div>
   <section class="cards-blog latest-blog">

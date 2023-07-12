@@ -23,7 +23,9 @@ const fetchPost = () => {
         fields.value = res.data.data
         url.value = '/' + res.data.data.imagePath;
     }).catch((error) => {
-        console.log(error);
+        if (error.response.status === 403) {
+            router.push({ name: 'DashboardPostsList' });
+        }
     })
 }
 
@@ -66,7 +68,7 @@ const submit = () => {
      * created witht the _method PUT, so that PUT request will
      * be hidden while the axios.post will be used
      */
-    const fd = new FormData();
+    let fd = new FormData();
     fd.append('title', fields.value.title);
     fd.append('category_id', fields.value.category_id);
     if (fields.value.file) {
@@ -80,15 +82,15 @@ const submit = () => {
         headers: { 'Content-Type': "multipart/form-data" }
     }).then((res) => {
         emit('showEditSuccess', 'Post has been edited successfully!');
-        // successShow.value = res.data.successMessage;
-        // setInterval(() => {
-        //     successShow.value = '';
-        // }, 2500);
-        router.push({name: 'DashboardPostsList'})
+
+        router.push({ name: 'DashboardPostsList' })
     }).catch((error) => {
         errors.value = error.response.data.errors;
+        if (error.response.status === 403) {
+            router.push({ name: 'DashboardPostsList' });
+        }
     })
-}
+}   
 
 </script>
 
