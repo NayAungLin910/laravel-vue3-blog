@@ -14,20 +14,22 @@ class PostController extends Controller
 {
     public function index(Request $request)
     {
-        $posts = PostResource::collection(Post::latest()->get());
+        $posts = Post::query();
         
         // filter by category if selected
         if ($request->category) {
-            $posts = PostResource::collection(
-                Category::where('name', $request->category)
+            $posts = Category::where('name', $request->category)
                 ->firstOrFail()
-                ->posts()
-                ->latest()
-                ->get()
-            );
+                ->posts();
+        }else if($request->search) {
+            // filter by search word
+            $posts = $posts->where('title', 'like', "%$request->search%")
+                ->orWhere('body', 'like', "%$request->search%");
         }
 
-        return $posts;
+        $postsResource = PostResource::collection(($posts->latest()->paginate(2)));
+
+        return $postsResource;
     }
 
     public function store(Request $request)
